@@ -37,6 +37,16 @@ camera_2_Rmat = camera_2.Rmat;
 camera_1_Kmat = camera_1.Kmat;
 camera_2_Kmat = camera_2.Kmat;
 
+task3_1(camera_1, camera_2);
 
+% load mocap points
+
+mocap_data = load('../Project2DataFiles/Parameters_V2_1.mat');
+
+mocap_pts3D = mocap_data.pts3D;
+
+% project 3D-points to 2D pixels
+
+task3_2(camera_1, camera_2, mocap_data);
 
 end
