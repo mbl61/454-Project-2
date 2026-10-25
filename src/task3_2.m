@@ -1,4 +1,4 @@
-function task3_2 (camera_1, camera_2, mocap_data)
+function [pts2d_1, pts2d_2] = task3_2 (camera_1, camera_2, mocap_data)
 
 % this function projects 3D-points to 2D pixels then draws on images
 

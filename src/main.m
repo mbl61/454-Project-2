@@ -2,8 +2,10 @@ function main()
 
 % load camera patameters
 
-camera_1 = load('../Project2DataFiles/Parameters_V1_1.mat');
-camera_2 = load('../Project2DataFiles/Parameters_V2_1.mat');
+data1 = load('../Project2DataFiles/Parameters_V1_1.mat');
+data2 = load('../Project2DataFiles/Parameters_V2_1.mat');
+camera_1 = data1.Parameters;
+camera_2 = data2.Parameters;
 
 % fprintf(fieldnames(camera_1));
 
@@ -41,12 +43,16 @@ task3_1(camera_1, camera_2);
 
 % load mocap points
 
-mocap_data = load('../Project2DataFiles/Parameters_V2_1.mat');
+mocap_data = load('../Project2DataFiles/mocapPoints3D.mat');
 
 mocap_pts3D = mocap_data.pts3D;
 
 % project 3D-points to 2D pixels
 
-task3_2(camera_1, camera_2, mocap_data);
+[pts2d_1, pts2d_2] = task3_2(camera_1, camera_2, mocap_data);
+
+% recover 2D pixels to 3D-pts
+
+recover_pts = task3_3(camera_1, camera_2, mocap_data, pts2d_1, pts2d_2);
 
 end
