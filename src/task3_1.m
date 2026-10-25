@@ -32,7 +32,7 @@ for i = 1:2
         0, f, cy;
         0, 0, 1];
     
-    fprintf("Difference between camera %d Kmat and calculated Kmat:\n", i)
+    fprintf("Difference between camera %d Kmat and calculated Kmat:\n", i);
     disp(cam.Kmat - Kmat);
     
     % Pmat
