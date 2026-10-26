@@ -59,4 +59,16 @@ recover_pts = task3_3(camera_1, camera_2, mocap_data, pts2d_1, pts2d_2, 1);
 
 task3_4(camera_1, camera_2)
 
+% compute fundamental matrix from camera parameters
+
+F_camera = task3_5(camera_1, camera_2);
+
+% compute fundamental matrix from 8 points
+
+[F_manual, selected_pts1, selected_pts2] = task3_6();
+
+% evaluate new fundamental matrix
+
+task3_7(F_manual, F_camera, selected_pts1, selected_pts2);
+
 end
