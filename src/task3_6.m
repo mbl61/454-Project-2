@@ -19,7 +19,7 @@ end
 f_v = V(:,end);
 
 for i = 1:3
-    F(i,:) = f_v(3 * i - 2:3 * i);
+    F(:,i) = f_v(3 * i - 2:3 * i);
 end
 
 % rank fundamental matrix to 2
