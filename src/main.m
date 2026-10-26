@@ -47,12 +47,16 @@ mocap_data = load('../Project2DataFiles/mocapPoints3D.mat');
 
 mocap_pts3D = mocap_data.pts3D;
 
-% project 3D-points to 2D pixels
+% project 3D-mocap-points to 2D pixels
 
 [pts2d_1, pts2d_2] = task3_2(camera_1, camera_2, mocap_data);
 
-% recover 2D pixels to 3D-pts
+% recover 2D pixels to 3D-mocap-pts
 
 recover_pts = task3_3(camera_1, camera_2, mocap_data, pts2d_1, pts2d_2);
+
+% measure points in scene
+
+task3_4(camera_1, camera_2)
 
 end
