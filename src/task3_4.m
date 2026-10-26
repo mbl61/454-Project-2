@@ -52,13 +52,12 @@ fprintf('Height of the person:  %.12g\n', person_h);
 
 fprintf('----------------------------\n');
 
-% camera height
+% camera location
 cam_pt1 = [1463, 254];
 cam_pt2 = [721, 154];
 
 cam_pt3d = task3_3(camera_1, camera_2, [], cam_pt1.', cam_pt2.', 0);
-cam_h = cam_pt3d(3);
 
-fprintf('Height of the camera:  %.12g\n', cam_h);
+fprintf('Location of the camera:  (%.12g, %.12g, %.12g)\n', cam_pt3d);
 
 end
