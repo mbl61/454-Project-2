@@ -53,7 +53,7 @@ mocap_pts3D = mocap_data.pts3D;
 
 % recover 2D pixels to 3D-mocap-pts
 
-recover_pts = task3_3(camera_1, camera_2, mocap_data, pts2d_1, pts2d_2);
+recover_pts = task3_3(camera_1, camera_2, mocap_data, pts2d_1, pts2d_2, 1);
 
 % measure points in scene
 
