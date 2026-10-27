@@ -1,5 +1,6 @@
 function [sed_manual, sed_camera] = task3_7(F_manual, F_camera, pts1, pts2)
 % evaluate the fundamental matrix from 3_5 and 3_6
+% pts1 and pts2 are N*2 arrays
 
 % to homogeneous coordinate
 pts1 = [pts1, ones(size(pts1, 1), 1)].';
@@ -19,7 +20,7 @@ epipolar_lines2_c = F_camera * pts1;
 
 sed_camera = calculate_SED(epipolar_lines1_c, epipolar_lines2_c, pts1, pts2);
 
-fprintf('Eight-point fundamental matrix SED (Camera1, Camera2): %.12g, %.12g\n', sed_manual);
-fprintf('Camera-parameter fundamental matrix MSE (Camera1, Camera2): %.12g, %.12g\n', sed_camera);
+fprintf('Eight-point fundamental matrix SED: %.12g\n', sed_manual);
+fprintf('Camera-parameter fundamental matrix SED: %.12g\n', sed_camera);
 
 end

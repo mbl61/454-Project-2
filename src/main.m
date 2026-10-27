@@ -65,10 +65,10 @@ F_camera = task3_5(camera_1, camera_2);
 
 % compute fundamental matrix from 8 points
 
-[F_manual, selected_pts1, selected_pts2] = task3_6();
+F_manual = task3_6();
 
-% evaluate new fundamental matrix
+% evaluate both matrix with mocap points
 
-task3_7(F_manual, F_camera, selected_pts1, selected_pts2);
+task3_7(F_manual, F_camera, pts2d_1.', pts2d_2.');
 
 end
