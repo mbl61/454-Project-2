@@ -1,4 +1,4 @@
-function F = task3_5(camera_1, camera_2)
+function F = task3_5(camera_1, camera_2, img1, img2)
 % compute a 3*3 fundamental matrix from two camera parameter 
 
 R = camera_2.Rmat*camera_1.Rmat';
@@ -13,5 +13,25 @@ E_matrix = R * T_cross_p;
 F_matrix = inv(camera_2.Kmat)' * E_matrix * inv(camera_1.Kmat);
 
 F = F_matrix / norm(F_matrix);
+
+$ eight points from task3_6
+% see sampling points in eight_points/
+pts1 = [[979, 935]; [337, 709]; [1514, 710]; [1124, 298]; [1274, 235]; [1454, 358]; [1463, 256]; [577, 392]];
+pts2 = [[1712, 698]; [935, 892]; [1108, 530]; [217, 185]; [437, 113]; [698, 251]; [716, 155]; [1042, 346]];
+
+% each point produces an epipolar line in the other images      
+pts1_h = [pts1, ones(size(pts1, 1), 1)].';
+pts2_h = [pts2, ones(size(pts2, 1), 1)].';
+lines1 = F.' * pts2_h;
+lines2 = F * pts1_h;
+colors = lines(size(pts1, 1));
+
+figure('Name', 'Camera-parameter epipolar', 'NumberTitle', 'off', 'Position', [100, 100, 1400, 500]);
+subplot(1, 2, 1);
+draw_epipolar_lines(img1, pts1, lines1, colors);
+title('Camera 1: epipolar lines from camera 2 points');
+subplot(1, 2, 2);
+draw_epipolar_lines(img2, pts2, lines2, colors);
+title('Camera 2: epipolar lines from camera 1 points');
 
 end

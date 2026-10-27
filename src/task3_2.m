@@ -1,15 +1,6 @@
-function [pts2d_1, pts2d_2] = task3_2 (camera_1, camera_2, mocap_data)
+function [pts2d_1, pts2d_2] = task3_2 (camera_1_Pmat, camera_2_Pmat, camera_1_Kmat, camera_2_Kmat, mocap_data, img1, img2)
 
 % this function projects 3D-points to 2D pixels then draws on images
-
-img1 = imread('../Project2DataFiles/im1corrected.jpg');
-img2 = imread('../Project2DataFiles/im2corrected.jpg');
-
-camera_1_Pmat = camera_1.Pmat;
-camera_2_Pmat = camera_2.Pmat;
-
-camera_1_Kmat = camera_1.Kmat;
-camera_2_Kmat = camera_2.Kmat;
 
 mocap_pts3D = mocap_data.pts3D; % size: 3*N
 
