@@ -1,0 +1,135 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.6em}
+\setcounter{tocdepth}{1}
+
+\newcommand{\tasksection}[2]{
+    \clearpage
+    \phantomsection
+    \section*{#1: #2}
+    \addcontentsline{toc}{section}{#1: #2}
+}
+
+\title{Project 2 Report\\[0.4em]
+    \large CMPEN/EE 454}
+\author{Mingcheng Liang, [Enter Your Name Here]\\}
+\date{2026/10/27}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\tasksection{Task 3.1}{Camera Parameters}
+\label{sec:task3-1}
+
+\tasksection{Task 3.2}{Projection of 3D Points}
+\label{sec:task3-2}
+
+\tasksection{Task 3.3}{3D Reconstruction by Triangulation}
+\label{sec:task3-3}
+
+\subsection*{Objective and projection model}
+Task 3.2 produces two sets of corresponding pixel locations by projecting the 39 mocap points into the two camera views. In this task, each pair is used to reconstruct a 3D point, which is then compared with its original mocap position.
+
+For camera $j\in\{1, 2\}$, use the full pixel projection matrix:
+\[
+    P_j = K_j \, \texttt{Pmat}_j \in \mathbb{R}^{3 \times 4}.
+\]
+Here, $K_j$ is the intrinsic matrix and $\texttt{Pmat}_j$ is the world-to-camera extrinsic matrix. A world point $\widetilde{\mathbf{X}}=[X,Y,Z,1]^T$ and its corresponding pixel $\widetilde{\mathbf{x}}_j=[u_j,v_j,1]^T$ satisfy:
+\[
+    \lambda_j \widetilde{\mathbf{x}}_j = P_j \widetilde{\mathbf{X}},
+    \qquad j = 1, 2,
+\]
+where $\lambda_j$ is the projective scale. 
+
+Ideally, the two back-projected rays intersect at the original 3D point. However, measurement noise or numerical errors may prevent an exact intersection. We therefore reconstruct the 3D point using linear triangulation based on the Direct Linear Transformation (DLT) method, with the homogeneous system solved using Singular Value Decomposition (SVD).
+
+\subsection*{Linear triangulation and SVD implementation}
+
+Write the rows of $P_j$ as $p_{j1}^T , p_{j2}^T , p_{j3}^T$. Eliminating $\lambda_j = p_{j3}^T \widetilde{\mathbf{X}}$ gives two linear constraints per camera:
+\[
+    (u_j p_{j3}^T - p_{j1}^T)\widetilde{\mathbf{X}}=0,
+    \qquad
+    (v_j p_{j3}^T - p_{j2}^T)\widetilde{\mathbf{X}}=0.
+\]
+Combining both views yields a $4\times4$ homogeneous system,
+\[
+    A\widetilde{\mathbf{X}}=0,
+    \qquad
+    A=\begin{bmatrix}
+        u_1 p_{13}^T - p_{11}^T\\
+        v_1 p_{13}^T - p_{12}^T\\
+        u_2 p_{23}^T - p_{21}^T\\
+        v_2 p_{23}^T - p_{22}^T
+    \end{bmatrix}.
+\]
+In an ideal noise-free and non-degenerate case, $A$ has rank three and its null space determines the point up to scale. But with numerical error or noisy coordinates, we need to solve the constrained algebraic least-squares problem:
+\[
+    \widehat{\mathbf{h}} = \underset{\| \mathbf{h} \|_2 = 1}{\operatorname{argmin}}\| A \mathbf{h} \|_2^2.
+\]
+The constraint excludes the trivial solution. 
+
+Let
+$A = U \Sigma V^T$ with singular values $\sigma_1 \geq \sigma_2 \geq \sigma_3 \geq \sigma_4 \geq 0$. Since $A \mathbf{v}_k = \sigma_k \mathbf{u}_k$, the minimum is attained by
+$\widehat{\mathbf{h}}=\mathbf{v}_4$, the last column of $V$.
+
+The resulting homogeneous solution is converted to Euclidean 3D coordinates by:
+\[
+\widehat {\mathbf{X}} = 
+\left[
+\frac{h_1}{h_4},
+\frac{h_2}{h_4},
+\frac{h_3}{h_4}
+\right]^T.
+\]
+
+This produces the reconstructed 3D point in the world coordinate.
+
+\clearpage
+
+\subsection*{Verification against the mocap points}
+To verify reconstruction, we pass the two projected point arrays from Task 3.2 in their original correspondence order to the triangulation function. The output $\widehat{\mathbf{X}}_i$ is compared with the corresponding original point $\mathbf{X}_i$ in \texttt{mocap\_data.pts3D}. The quantitative measure is the mean squared distance:
+\[
+    \mathrm{MSE} = \frac{1}{n} \sum_{i=1}^{n} \left\| \widehat{\mathbf{X}}_i - \mathbf{X}_i \right\|_2^2
+\]
+
+The MSE has units of squared world-coordinate units.
+
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+Quantity & Result \\
+\midrule
+Number of mocap points & 39 \\
+Mean squared reconstruction error & Enter MSE here \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Because the image locations were generated from the same cameras and original 3D points, without added measurement noise, the MSE is expected to be very close to zero, with any small residual arising from floating-point arithmetic.
+
+\tasksection{Task 3.4}{Scene Measurements}
+\label{sec:task3-4}
+
+\tasksection{Task 3.5}{Fundamental Matrix from Camera Parameters}
+\label{sec:task3-5}
+
+\tasksection{Task 3.6}{Fundamental Matrix from Point Correspondences}
+\label{sec:task3-6}
+
+
+\tasksection{Task 3.7}{Fundamental Matrix Evaluation}
+\label{sec:task3-7}
+
+\tasksection{Extra Task 1}{Camera Geometry for Cropped Views}
+\label{sec:extra-1}
+
+
+\end{document}

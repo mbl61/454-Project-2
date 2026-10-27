@@ -1,6 +1,7 @@
 function recover_pts = task3_3 (camera_1, camera_2, mocap_data, pts2d_1, pts2d_2, testmode)
 
 % this function recover 2D-points to 3D points by triangulation then compare with original points
+% see more details in report
 
 camera_1_Pmat = camera_1.Pmat;
 camera_2_Pmat = camera_2.Pmat;
