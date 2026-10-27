@@ -46,4 +46,26 @@ F = T2' * F * T1;
 
 F = F / norm(F);
 
+fprintf('Fundamental matrix F:\n');
+fprintf('  % .12g % .12g  % .12g\n', F.');
+
+% load images
+img1 = imread('../Project2DataFiles/im1corrected.jpg');
+img2 = imread('../Project2DataFiles/im2corrected.jpg');
+
+% each point produces an epipolar line in the other images
+pts1_h = [pts1, ones(size(pts1, 1), 1)].';
+pts2_h = [pts2, ones(size(pts2, 1), 1)].';
+lines1 = F.' * pts2_h;
+lines2 = F * pts1_h;
+colors = lines(size(pts1, 1));
+
+figure('Name', 'Eight-point epipolar', 'NumberTitle', 'off', 'Position', [100, 100, 1400, 500]);
+subplot(1, 2, 1);
+draw_epipolar_lines(img1, pts1, lines1, colors);
+title('Camera 1: epipolar lines from camera 2 points');
+subplot(1, 2, 2);
+draw_epipolar_lines(img2, pts2, lines2, colors);
+title('Camera 2: epipolar lines from camera 1 points');
+
 end
