@@ -4,9 +4,11 @@ function [F, pts1, pts2] = task3_6(pts1, pts2)
 
 F = zeros(3,3);
 
+%{
 % Eight points give a huge error. To reduce the error, we add more points.
 pts1 = [pts1; [1754, 115]; [1871, 940]];
 pts2 = [pts2; [872, 44]; [1618, 560]];
+%}
 
 % normalize points
 mu1 = mean(pts1, 1);

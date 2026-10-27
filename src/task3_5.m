@@ -15,7 +15,7 @@ F_matrix = inv(camera_2.Kmat)' * E_matrix * inv(camera_1.Kmat);
 
 F = F_matrix / norm(F_matrix);
 
-if testmode:
+if testmode
     fprintf('----------------------------\n');
     fprintf('Task3.5:\n');
 

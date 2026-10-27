@@ -14,6 +14,10 @@ camera_2 = data2.Parameters;
 eight_pts1 = [[979, 935]; [337, 709]; [1514, 710]; [1124, 298]; [1274, 235]; [1454, 358]; [1463, 256]; [577, 392]];
 eight_pts2 = [[1712, 698]; [935, 892]; [1108, 530]; [217, 185]; [437, 113]; [698, 251]; [716, 155]; [1042, 346]];
 
+% Eight points give a huge error. To reduce the error, we add more points.
+eight_pts1 = [eight_pts1; [1754, 115]; [1871, 940]];
+eight_pts2 = [eight_pts2; [872, 44]; [1618, 560]];
+
 % fprintf(fieldnames(camera_1));
 
 camera_1_foclen = camera_1.foclen;

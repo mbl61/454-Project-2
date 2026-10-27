@@ -30,7 +30,7 @@ fprintf('----------------------------\n');
 fprintf('Extra 1:\n');
 
 fprintf('Fundamental matrix F from cropped image:\n');
-fprintf('  % .12g % .12g  % .12g\n', F.');
+fprintf('  % .12g % .12g  % .12g\n', F_crop.');
 
 fprintf('----------------------------\n');
 
