@@ -46,8 +46,13 @@ F = T2' * F * T1;
 
 F = F / norm(F);
 
+fprintf('----------------------------\n');
+fprintf('Task3.6:\n');
+
 fprintf('Fundamental matrix F from sampling points:\n');
 fprintf('  % .12g % .12g  % .12g\n', F.');
+
+fprintf('----------------------------\n');
 
 % load images
 img1 = imread('../Project2DataFiles/im1corrected.jpg');

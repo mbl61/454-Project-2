@@ -16,6 +16,9 @@ wall_pts3d = task3_3(camera_1, camera_2, [], wall_pts1.', wall_pts2.', 0);
 floor_plane = fit_plane(floor_pts3d);
 wall_plane = fit_plane(wall_pts3d);
 
+fprintf('----------------------------\n');
+fprintf('Task3.4:\n');
+
 fprintf('Floor plane: %.12g x %+.12g y %+.12g z %+.12g = 0\n', floor_plane);
 
 % compare with z = 0
@@ -59,5 +62,5 @@ cam_pt2 = [721, 154];
 cam_pt3d = task3_3(camera_1, camera_2, [], cam_pt1.', cam_pt2.', 0);
 
 fprintf('Location of the camera:  (%.12g, %.12g, %.12g)\n', cam_pt3d);
-
+fprintf('----------------------------\n');
 end

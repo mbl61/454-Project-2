@@ -42,11 +42,14 @@ end
 recover_pts = recover_pts(:,1:3) ./ recover_pts(:,4);
 
 if testmode
+    fprintf('----------------------------\n');
+    fprintf('Task 3.3:\n');
     % mean squared error of original pts and recover pts
     mocap_pts3D = mocap_data.pts3D;
     error = recover_pts - mocap_pts3D.';
     mse = mean(sum(error.^2, 2));
     fprintf('MSE: %.12g\n', mse);
+    fprintf('----------------------------\n');
 end
 
 end

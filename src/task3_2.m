@@ -23,7 +23,7 @@ pts2d_2 = camera_2_Kmat * camera_2_Pmat * mocap_pts3D;
 pts2d_1 = pts2d_1(1:2,:) ./ pts2d_1(3,:);
 pts2d_2 = pts2d_2(1:2,:) ./ pts2d_2(3,:);
 
-figure;
+figure('Name', 'Mocap point projection', 'NumberTitle', 'off');
 
 subplot(1, 2, 1);
 imshow(img1);

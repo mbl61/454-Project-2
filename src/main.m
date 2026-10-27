@@ -68,7 +68,7 @@ task3_4(camera_1, camera_2)
 
 % compute fundamental matrix from camera parameters
 
-F_camera = task3_5(camera_1, camera_2, eight_pts1, eight_pts2, img1, img2);
+F_camera = task3_5(camera_1, camera_2, eight_pts1, eight_pts2, img1, img2, 1);
 
 % compute fundamental matrix from 8 points
 

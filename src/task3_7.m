@@ -20,7 +20,11 @@ epipolar_lines2_c = F_camera * pts1;
 
 sed_camera = calculate_SED(epipolar_lines1_c, epipolar_lines2_c, pts1, pts2);
 
+fprintf('----------------------------\n');
+fprintf('Task 3.7:\n');
+
 fprintf('Eight-point fundamental matrix SED: %.12g\n', sed_manual);
 fprintf('Camera-parameter fundamental matrix SED: %.12g\n', sed_camera);
+fprintf('----------------------------\n');
 
 end

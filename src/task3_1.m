@@ -4,6 +4,9 @@ function task3_1 (camera_1, camera_2)
 
 cameras = {camera_1, camera_2};
 
+fprintf('----------------------------\n');
+fprintf('Task 3.1:\n');
+
 for i = 1:2
     cam = cameras{i};
 
@@ -35,12 +38,12 @@ for i = 1:2
     fprintf("Difference between camera %d Kmat and calculated Kmat:\n", i);
     disp(cam.Kmat - Kmat);
     
-    % Pmat
+    % Pmat is extrinsic matrix [R, -R*C]
     t = -R * C;
     extrinsic_matrix = [R, t];
-    Pmat = Kmat * extrinsic_matrix;
-    fprintf("Difference between camera %d Pmat and calculated Pmat:\n", i);
-    disp(cam.Pmat - Pmat);
+    fprintf("Difference between camera %d Pmat and calculated extrinsic matrix [R, -R*C]:\n", i);
+    disp(cam.Pmat - extrinsic_matrix);
+    fprintf('----------------------------\n');
 end
 
 end

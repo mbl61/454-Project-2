@@ -24,6 +24,14 @@ camera_2.Kmat = camera_2_Kmat;
 
 [crop_pts2d_1, crop_pts2d_2] = task3_2(camera_1, camera_2, mocap_data, img1, img2);
 
-F_crop = task3_5(camera_1, camera_2, crop_pts2d_1.', crop_pts2d_2.', img1, img2);
+F_crop = task3_5(camera_1, camera_2, crop_pts2d_1.', crop_pts2d_2.', img1, img2, 0);
+
+fprintf('----------------------------\n');
+fprintf('Extra 1:\n');
+
+fprintf('Fundamental matrix F from cropped image:\n');
+fprintf('  % .12g % .12g  % .12g\n', F.');
+
+fprintf('----------------------------\n');
 
 end
