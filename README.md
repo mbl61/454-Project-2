@@ -2,6 +2,12 @@
 
 This repository is located at `https://github.com/mbl61/454-Project-2`
 
+## How to use
+
+```
+cd src\
+main
+```
 
 ## Expected Output:
 ```
@@ -96,4 +102,9 @@ Fundamental matrix F from cropped image:
    0.000239294225665  3.378792298e-05   0.343560976928
    0.0378817128513 -0.502220112294  -0.811291647511
 ----------------------------
+```
+
+The expected output figures are in
+```
+\figures\
 ```
