@@ -1,4 +1,4 @@
-function [F, pts1, pts2] = task3_6(pts1, pts2)
+function [F, pts1, pts2] = task3_6(pts1, pts2, img1, img2)
 % compute a 3*3 fundamental matrix using eight-point algorithm
 % pts1 and pts2 size = 8*2
 
@@ -55,10 +55,6 @@ fprintf('Fundamental matrix F from sampling points:\n');
 fprintf('  % .12g % .12g  % .12g\n', F.');
 
 fprintf('----------------------------\n');
-
-% load images
-img1 = imread('../Project2DataFiles/im1corrected.jpg');
-img2 = imread('../Project2DataFiles/im2corrected.jpg');
 
 % each point produces an epipolar line in the other images
 pts1_h = [pts1, ones(size(pts1, 1), 1)].';

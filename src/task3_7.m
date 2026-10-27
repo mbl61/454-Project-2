@@ -1,10 +1,10 @@
 function [sed_manual, sed_camera] = task3_7(F_manual, F_camera, pts1, pts2)
 % evaluate the fundamental matrix from 3_5 and 3_6
-% pts1 and pts2 are N*2 arrays
+% pts1 and pts2 are 2*N arrays
 
 % to homogeneous coordinate
-pts1 = [pts1, ones(size(pts1, 1), 1)].';
-pts2 = [pts2, ones(size(pts2, 1), 1)].';
+pts1 = [pts1; ones(1, size(pts1, 2))];
+pts2 = [pts2; ones(1, size(pts2, 2))];
 
 % evaluate eight points fundamental matrix
 

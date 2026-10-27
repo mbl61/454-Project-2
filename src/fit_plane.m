@@ -1,5 +1,5 @@
 function plane = fit_plane(pts3d)
-% fit Ax + By + Cz + D = 0 to non-collinear 3D points (see 3.4.md)
+% fit Ax + By + Cz + D = 0 to non-collinear 3D points (see report)
 
 pts3d_mean = mean(pts3d, 1);
 M = pts3d - pts3d_mean;
