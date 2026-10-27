@@ -1,8 +1,10 @@
 # Modify F matrix for cropped views
 
-Cut the image_1 to $(575, 374), (748, 728)$,
+Cut the image_1 to $(515, 374), (748, 728)$,
 
-image_2 to $(952, 328), (1139, 785)$.
+image_2 to $(935, 328), (1139, 785)$.
+
+These bounds include all 39 projected mocap points.
 
 ##
 Assume $(x_1,y_1)$ is the top-left corner of the cutting image, $(x_2, y_2)$ is the bottom-right of the cutting image.

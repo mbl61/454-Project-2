@@ -9,6 +9,11 @@ img2 = imread('../Project2DataFiles/im2corrected.jpg');
 camera_1 = data1.Parameters;
 camera_2 = data2.Parameters;
 
+% eight points for task3.5, 3.6,
+% see sampling points in eight_points/
+eight_pts1 = [[979, 935]; [337, 709]; [1514, 710]; [1124, 298]; [1274, 235]; [1454, 358]; [1463, 256]; [577, 392]];
+eight_pts2 = [[1712, 698]; [935, 892]; [1108, 530]; [217, 185]; [437, 113]; [698, 251]; [716, 155]; [1042, 346]];
+
 % fprintf(fieldnames(camera_1));
 
 camera_1_foclen = camera_1.foclen;
@@ -51,7 +56,7 @@ mocap_pts3D = mocap_data.pts3D;
 
 % project 3D-mocap-points to 2D pixels
 
-[pts2d_1, pts2d_2] = task3_2(camera_1_Pmat, camera_2_Pmat, camera_1_Kmat, camera_2_Kmat, mocap_data, img1, img2);
+[pts2d_1, pts2d_2] = task3_2(camera_1, camera_2, mocap_data, img1, img2);
 
 % recover 2D pixels to 3D-mocap-pts
 
@@ -63,14 +68,17 @@ task3_4(camera_1, camera_2)
 
 % compute fundamental matrix from camera parameters
 
-F_camera = task3_5(camera_1, camera_2, img1, img2);
+F_camera = task3_5(camera_1, camera_2, eight_pts1, eight_pts2, img1, img2);
 
 % compute fundamental matrix from 8 points
 
-F_manual = task3_6();
+F_manual = task3_6(eight_pts1, eight_pts2);
 
 % evaluate both matrix with mocap points
 
 task3_7(F_manual, F_camera, pts2d_1.', pts2d_2.');
+
+% project mocap points and draw epipolar lines on the cropped views
+extra_1(camera_1, camera_2, mocap_data, img1, img2);
 
 end

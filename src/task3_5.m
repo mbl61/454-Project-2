@@ -1,5 +1,6 @@
-function F = task3_5(camera_1, camera_2, img1, img2)
+function F = task3_5(camera_1, camera_2, pts1, pts2, img1, img2)
 % compute a 3*3 fundamental matrix from two camera parameter 
+% eight points from task3_6
 
 R = camera_2.Rmat*camera_1.Rmat';
 T = camera_1.Rmat*(camera_2.position(:)-camera_1.position(:));
@@ -14,10 +15,8 @@ F_matrix = inv(camera_2.Kmat)' * E_matrix * inv(camera_1.Kmat);
 
 F = F_matrix / norm(F_matrix);
 
-$ eight points from task3_6
-% see sampling points in eight_points/
-pts1 = [[979, 935]; [337, 709]; [1514, 710]; [1124, 298]; [1274, 235]; [1454, 358]; [1463, 256]; [577, 392]];
-pts2 = [[1712, 698]; [935, 892]; [1108, 530]; [217, 185]; [437, 113]; [698, 251]; [716, 155]; [1042, 346]];
+fprintf('Fundamental matrix F from camera:\n');
+fprintf('  % .12g % .12g  % .12g\n', F.');
 
 % each point produces an epipolar line in the other images      
 pts1_h = [pts1, ones(size(pts1, 1), 1)].';

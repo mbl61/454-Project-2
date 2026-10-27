@@ -1,12 +1,8 @@
-function [F, pts1, pts2] = task3_6()
+function [F, pts1, pts2] = task3_6(pts1, pts2)
 % compute a 3*3 fundamental matrix using eight-point algorithm
 % pts1 and pts2 size = 8*2
 
 F = zeros(3,3);
-
-% see sampling points in eight_points/
-pts1 = [[979, 935]; [337, 709]; [1514, 710]; [1124, 298]; [1274, 235]; [1454, 358]; [1463, 256]; [577, 392]];
-pts2 = [[1712, 698]; [935, 892]; [1108, 530]; [217, 185]; [437, 113]; [698, 251]; [716, 155]; [1042, 346]];
 
 % Eight points give a huge error. To reduce the error, we add more points.
 pts1 = [pts1; [1754, 115]; [1871, 940]];
@@ -50,7 +46,7 @@ F = T2' * F * T1;
 
 F = F / norm(F);
 
-fprintf('Fundamental matrix F:\n');
+fprintf('Fundamental matrix F from sampling points:\n');
 fprintf('  % .12g % .12g  % .12g\n', F.');
 
 % load images
