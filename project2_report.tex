@@ -108,7 +108,7 @@ The MSE has units of squared world-coordinate units.
 Quantity & Result \\
 \midrule
 Number of mocap points & 39 \\
-Mean squared reconstruction error & Enter MSE here \\
+Mean squared reconstruction error & $1.907 \times 10^{-19}$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -118,8 +118,161 @@ Because the image locations were generated from the same cameras and original 3D
 \tasksection{Task 3.4}{Scene Measurements}
 \label{sec:task3-4}
 
+\subsection*{Objective and scene-point reconstruction}
+After verifying triangulation in Task 3.3, we use manually selected corresponding pixels in the two views to measure the scene. Three points are selected on the floor and three on the wall. Additional point pairs identify the top of the door, the top of the person, and the center of the camera. Each pair is reconstructed using the same DLT triangulation method as in Task 3.3.
+
+\subsection*{Least-squares plane fitting}
+Given $m\geq 3$ non-collinear reconstructed points $\mathbf{p}_i = [X_i,Y_i,Z_i]^T$, we want to find a plane
+\[
+    aX + bY + cZ + d = 0,
+    \qquad
+    \mathbf{n} = [a,b,c]^T,\quad \| \mathbf{n}\|_2 = 1.
+\]
+Where $\mathbf{n}$ is the unit normal vector to the plane. We therefore minimize the sum of squared distances:
+\[
+    \min_{\| \mathbf{n} \|_2 = 1, d \in\mathbb{R}} \sum_{i = 1}^{m}(\mathbf{n}^T \mathbf{p}_i + d)^2.
+\]
+For a fixed normal vector $\mathbf{n}$, differentiating with respect to $d$ gives
+\[
+    2\sum_{i = 1}^{m}(\mathbf{n}^T \mathbf{p}_i + d) = 0
+    \quad\Longrightarrow\quad
+    d = -\mathbf{n}^T \bar{\mathbf{p}},
+    \qquad
+    \bar{\mathbf{p}} = \frac{1}{m} \sum_{i = 1}^{m} \mathbf{p}_i.
+\]
+Substituting $d = -\mathbf{n}^T \bar{\mathbf{p}}$ define the centered matrix
+\[
+    M = \begin{bmatrix}
+        (\mathbf{p}_1 - \bar{\mathbf{p}})^T\\
+        \vdots\\
+        (\mathbf{p}_m - \bar{\mathbf{p}})^T
+    \end{bmatrix}\in \mathbb{R}^{m \times 3},
+    \qquad
+    \widehat{\mathbf{n}} = \underset{\| \mathbf{n}\|_2 = 1}{\operatorname{argmin}}
+    \|M\mathbf{n}\|_2^2.
+\]
+
+\subsection*{SVD implementation}
+Let $M = U \Sigma V^T$, with $\sigma_1 \geq \sigma_2 \geq \sigma_3 \geq 0$. As in Task 3.3, the unit vector that minimizes the squared norm is the right singular vector associated with the smallest singular value:
+\[
+    \widehat{\mathbf{n}} = \mathbf{v}_3,
+    \qquad
+    \widehat d = -\widehat{\mathbf{n}}^T \bar{\mathbf{p}}.
+\]
+The function \texttt{fit\_plane} centers the points, computes the SVD, and returns $[a,b,c,d]$. Reversing the signs of all coefficients describes the same plane.
+
+\clearpage
+
+\subsection*{Floor and wall measurements}
+Using the point correspondences in \texttt{task3\_4}, the reconstructed floor plane is approximately
+\[
+    -0.00968268x + 0.000131754y - 0.999953z - 15.35496 = 0.
+\]
+To compare its orientation with $z = 0$, use the acute angle between its unit normal $\mathbf{n}_f$ and $\mathbf{e}_z = [0,0,1]^T$:
+\[
+    \theta = \cos^{-1}\!\left(\left| \mathbf{n}_f^T \mathbf{e}_z\right|\right) = \cos^{-1}(|c_f|).
+\]
+The absolute value makes the result independent of the normal's sign. The height error relative to the reference floor is
+\[
+    \mathrm{MSE}_{z = 0} = \frac{1}{m} \sum_{i = 1}^{m}z_i^2.
+\]
+This measures the reconstructed floor points' deviation from $z = 0$, rather than their residuals to the fitted plane.
+
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+Quantity & Result \\
+\midrule
+Number of floor points & 3 \\
+Angle between fitted floor and $z = 0$ & $0.55484^\circ$ \\
+Mean squared height relative to $z = 0$ & $452.22892\ \mathrm{mm}^2$ \\
+Root mean squared height relative to $z = 0$ & $21.27\ \mathrm{mm}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The small angular deviation and roughly $21$ mm root mean squared height support the approximation that the floor is $z = 0$. The fitted plane intersects the $z$-axis at approximately $-15.36$ mm. These deviations reflect uncertainty in the manually selected correspondences and the resulting triangulated points.
+
+The three points on the striped wall give the approximate plane
+\[
+    -0.00498019x - 0.999408y - 0.0340319z - 5443.91062 = 0.
+\]
+Its normal is dominated by the $y$ component, so the wall is approximately a vertical plane near $y = -5447$ mm, with a small tilt in the fitted result.
+
+\subsection*{Door, person, and camera measurements}
+Assuming the height of a reconstructed point $[x,y,z]^T$ is $z$. Applying this to the door top and the top of the person's head gives:
+
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+Measurement & Result \\
+\midrule
+Door height & $2034.38\ \mathrm{mm}$ \\
+Height of the person & $1461.56\ \mathrm{mm}$ \\
+Camera center $(x,y,z)$ & $(-76.02,-4893.80,2417.60)\ \mathrm{mm}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The person's measurement is the head height in the captured pose. The camera location refers to the visible camera near the striped wall. Since the image points are selected by hand, the reported measurements are approximate.
+
 \tasksection{Task 3.5}{Fundamental Matrix from Camera Parameters}
 \label{sec:task3-5}
+
+\subsection*{Method and slides reference}
+We use the method presented from the slides (\texttt{lecture17}, pages 8--9 and 18--22). Camera 1 corresponds to the slides's left camera and camera 2 to its right camera. With $S = [\mathbf{T}]_\times$, we have:
+\[
+    E = RS,
+    \qquad
+    F = K_2^{-T} E K_1^{-1},
+    \qquad
+    \mathbf{p}_2^T F \mathbf{p}_1 = 0,
+\]
+where $\mathbf{p}_j = [u_j,v_j,1]^T$ is a homogeneous pixel coordinate.
+
+\subsection*{Applying the method to the supplied calibration}
+The calibration gives world-to-camera rotations $R_j$ and camera centers $\mathbf{C}_j$, so $\mathbf{X}_j = R_j(\mathbf{X} - \mathbf{C}_j)$. Eliminating $\mathbf{X}$ gives
+\[
+    \mathbf{X}_2 = R_2 R_1^T \mathbf{X}_1 + R_2(\mathbf{C}_1 - \mathbf{C}_2) = R(\mathbf{X}_1 - \mathbf{T}),
+\]
+with
+\[
+    R = R_2 R_1^T,
+    \qquad
+    \mathbf{T} = R_1(\mathbf{C}_2 - \mathbf{C}_1).
+\]
+Here $R$ converts directions from camera 1 coordinates to camera 2 coordinates, and $\mathbf{T}$ is the location of camera 2 in camera 1 coordinates. Using the cross-product matrix $S = [\mathbf{T}]_\times$ on the slides (page 9), the implementation evaluates $E = RS$ and $F = K_2^{-T} E K_1^{-1}$. Finally, it divides $F$ by \texttt{norm(F)}, the matrix 2-norm, to fix the nonzero scale.
+
+\subsection*{Numerical result and verification}
+The normalized fundamental matrix is approximately
+\[
+    F = \begin{bmatrix}
+        -6.318270851\times10^{-8} & 1.286087745\times10^{-6} & -0.000397113266\\
+        1.519919331\times10^{-6} & 2.146099311\times10^{-7} & 0.001320899886\\
+        -0.000197388614 & -0.004461322711 & 0.999989077540
+    \end{bmatrix}.
+\]
+
+\clearpage
+
+\subsection*{Visual verification in both views}
+
+For visualization, we use epipolar lines:
+\[
+    \boldsymbol{\ell}_2 = F \mathbf{p}_1,
+    \qquad
+    \boldsymbol{\ell}_1 = F^T \mathbf{p}_2.
+\]
+\texttt{draw\_epipolar\_lines} overlays these lines and the ten selected point pairs passed by \texttt{main}.
+
+Figure~\ref{fig:task35-epipolar} shows both mapping directions. Each point lies close to the line generated by its match in the other image.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.86\textwidth]{figures/task3-5-report.png}
+    \caption{Epipolar geometry from the known camera calibration. Top: image 1 points with lines $F^T \mathbf{p}_2$. Bottom: image 2 points with lines $F \mathbf{p}_1$.}
+    \label{fig:task35-epipolar}
+\end{figure}
 
 \tasksection{Task 3.6}{Fundamental Matrix from Point Correspondences}
 \label{sec:task3-6}
@@ -131,5 +284,93 @@ Because the image locations were generated from the same cameras and original 3D
 \tasksection{Extra Task 1}{Camera Geometry for Cropped Views}
 \label{sec:extra-1}
 
+\subsection*{Objective and cropping rectangles}
+We crop the two images to focus on the person while retaining all mocap points. The crop bounds below are given as $(x,y)$ pixel coordinates in the original images.
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+View & Top-left $(x_L,y_T)$ & Bottom-right $(x_R,y_B)$ & Width $\times$ height \\
+\midrule
+1 & $(515,374)$ & $(748,728)$ & $234\times355$ \\
+2 & $(935,328)$ & $(1139,785)$ & $205\times458$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Transformation of pixel coordinates}
+The top-left pixel of each crop becomes pixel $(1,1)$ in the cropped image. Thus, an original pixel $(x,y)$ inside the cropping rectangle has new coordinates
+\[
+    x' = x - x_L + 1, \qquad y' = y - y_T + 1.
+\]
+Using homogeneous pixel coordinates $\mathbf{p} = [x,y,1]^T$ and $\mathbf{p}' = [x',y',1]^T$, this translation can be written as
+\[
+    \mathbf{p}' = T\mathbf{p},
+    \qquad
+    T = \begin{bmatrix}
+        1 & 0 & 1-x_L\\
+        0 & 1 & 1-y_T\\
+        0 & 0 & 1
+    \end{bmatrix}.
+\]
+The translation depends on the crop origin, so the same $T$ applies to every point in that image. For the selected rectangles,
+\[
+    T_1 = \begin{bmatrix}
+        1 & 0 & -514\\
+        0 & 1 & -373\\
+        0 & 0 & 1
+    \end{bmatrix},
+    \qquad
+    T_2 = \begin{bmatrix}
+        1 & 0 & -934\\
+        0 & 1 & -327\\
+        0 & 0 & 1
+    \end{bmatrix}.
+\]
+
+\subsection*{Updated camera intrinsic matrices}
+Let $\widetilde{\mathbf{X}} = [X,Y,Z,1]^T$ be a world point, and let $\texttt{Pmat}_j$ denote the extrinsic matrix of camera $j$. Its original projection satisfies
+\[
+    \lambda_j \mathbf{p}_j = K_j\, \texttt{Pmat}_j\, \widetilde{\mathbf{X}}.
+\]
+Multiplying by $T_j$ gives the projection into the cropped image:
+\[
+    \lambda_j \mathbf{p}'_j = (T_j K_j)\, \texttt{Pmat}_j\, \widetilde{\mathbf{X}},
+    \qquad
+    K_j' = T_j K_j.
+\]
+In particular, the intrinsic matrix becomes
+\[
+    K'_j = \begin{bmatrix}
+        f_j a_j & s_j & c_{x,j} - x_{L,j} + 1\\
+        0 & f_j & c_{y,j} - y_{T,j} + 1\\
+        0 & 0 & 1
+    \end{bmatrix}.
+\]
+
+\clearpage
+
+\subsection*{Fundamental matrix for the cropped views}
+We directly apply the result from Task 3.5. Cropping leaves the relative camera pose and essential matrix $E$ unchanged, so the fundamental matrix for the cropped views is
+\[
+    F' = (K'_2)^{-T} E (K'_1)^{-1}.
+\]
+For the selected crops, the result after the normalization used in \texttt{task3\_5} is approximately
+\[
+    F' = \begin{bmatrix}
+        -9.947407735\times10^{-6} & 2.024800691\times10^{-4} & 0.007891075104\\
+        2.392942257\times10^{-4} & 3.378792298\times10^{-5} & 0.343560976928\\
+        0.037881712851 & -0.502220112294 & -0.811291647511
+    \end{bmatrix}.
+\]
+\subsection*{Visual verification in the cropped images}
+Figure~\ref{fig:extra1-crops} shows the projected points and the epipolar geometry in the cropped images. The top row uses all points. The bottom row displays six selected projected points and the epipolar lines.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.73\textwidth]{figures/extra-1-report.png}
+    \caption{Cropped views using the updated camera intrinsics and fundamental matrix. Top: all mocap points projected. Bottom: six selected projected points and the epipolar lines.}
+    \label{fig:extra1-crops}
+\end{figure}
 
 \end{document}
