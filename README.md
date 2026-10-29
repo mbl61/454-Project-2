@@ -9,6 +9,10 @@ cd src\
 main
 ```
 
+## About the report
+
+The final report is at `\project2_report.pdf`. The other `.tex` and `.md` files are intermediate steps have been merged into the report.
+
 ## Expected Output:
 ```
 >> main
